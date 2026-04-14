@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 2 Review — Childhood Development</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #F8F7F4;
+    color: #1F2937;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  h1, h2 { font-family: 'Fraunces', serif; }
+
+  button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s ease;
+  }
+  button:active { transform: scale(0.97) !important; }
+
+  #menu { max-width: 540px; width: 100%; }
+  .menu-header { text-align: center; padding: 2rem 0 1.25rem; }
+  .menu-header .icon { font-size: 2.8rem; margin-bottom: 0.4rem; }
+  .menu-header h1 { font-size: 1.85rem; color: #111827; }
+  .menu-header .sub { font-size: 0.95rem; color: #6B7280; margin-top: 0.2rem; }
+  .menu-header .count { font-size: 0.8rem; color: #9CA3AF; margin-top: 0.5rem; }
+
+  .all-btn {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 14px;
+    background: #111827;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+  }
+  .all-btn:hover { background: #1F2937; }
+  .all-btn .badge {
+    background: rgba(255,255,255,0.2);
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+  }
+
+  .cat-grid { display: flex; flex-direction: column; gap: 0.6rem; }
+  .cat-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+  }
+  .cat-card:hover { transform: translateY(-2px); }
+  .cat-card .name { font-weight: 600; font-size: 0.92rem; }
+  .cat-card .badge {
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 20px;
+  }
+
+  #study { max-width: 500px; width: 100%; display: none; }
+  .top-bar { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+  .back-btn {
+    background: #F3F4F6;
+    padding: 0.4rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #374151;
+    font-weight: 500;
+  }
+  .back-btn:hover { background: #E5E7EB; }
+  .cat-label { font-weight: 700; font-size: 0.85rem; letter-spacing: 0.02em; }
+
+  .progress-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .progress-track { flex: 1; height: 6px; background: #E5E7EB; border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; width: 0%; }
+  .progress-text { font-size: 0.78rem; color: #9CA3AF; font-weight: 600; min-width: 50px; text-align: right; }
+
+  .card-container {
+    perspective: 1200px;
+    min-height: 320px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    transition: transform 0.28s ease, opacity 0.28s ease;
+  }
+  .card-container.swipe-right { transform: translateX(120%) rotate(8deg); opacity: 0; }
+  .card-container.swipe-left { transform: translateX(-120%) rotate(-8deg); opacity: 0; }
+
+  .card-inner {
+    width: 100%;
+    min-height: 320px;
+    position: relative;
+    transition: transform 0.45s ease;
+    transform-style: preserve-3d;
+  }
+  .card-inner.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    min-height: 320px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 18px;
+    padding: 2rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: #fff;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  }
+  .card-back { transform: rotateY(180deg); }
+  .q-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+  }
+  .card-text {
+    font-size: 1.15rem;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    line-height: 1.55;
+  }
+  .card-back .card-text { font-size: 1rem; font-weight: 600; line-height: 1.6; }
+  .tap-hint {
+    position: absolute;
+    bottom: 1rem;
+    font-size: 0.72rem;
+    color: #D1D5DB;
+    font-weight: 500;
+  }
+
+  .btn-row { display: flex; gap: 0.75rem; margin-bottom: 0.5rem; }
+  .btn-row.hidden { visibility: hidden; pointer-events: none; }
+  .judge-btn {
+    flex: 1;
+    padding: 0.85rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .missed-btn { background: #FEE2E2; color: #DC2626; }
+  .missed-btn:hover { background: #FECACA; }
+  .got-btn { background: #D1FAE5; color: #059669; }
+  .got-btn:hover { background: #A7F3D0; }
+
+  .kb-hint { text-align: center; font-size: 0.72rem; color: #D1D5DB; }
+
+  #done { max-width: 420px; width: 100%; text-align: center; display: none; padding-top: 3rem; }
+  .done-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+  #done h2 { font-size: 1.6rem; color: #111827; }
+  .done-sub { font-size: 0.9rem; color: #6B7280; margin: 0.25rem 0 1rem; }
+  .score-row { display: flex; gap: 1rem; justify-content: center; margin-bottom: 0.75rem; }
+  .score-box {
+    padding: 1.25rem 2rem;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+  }
+  .score-num { font-size: 2rem; font-weight: 700; font-family: 'Fraunces', serif; }
+  .score-lbl { font-size: 0.78rem; color: #6B7280; font-weight: 500; }
+  .done-pct { font-size: 1rem; font-weight: 600; color: #374151; margin-bottom: 1rem; }
+  .done-actions { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; }
+  .done-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+  .done-btn:hover { filter: brightness(0.95); }
+</style>
+</head>
+<body>
+
+<div id="menu">
+  <div class="menu-header">
+    <div class="icon">📖</div>
+    <h1>Unit 2 Review</h1>
+    <p class="sub">Childhood Development · Infancy → Middle Childhood</p>
+    <p class="count" id="totalCount"></p>
+  </div>
+  <button class="all-btn" onclick="startAll()">
+    Study All Cards <span class="badge" id="totalBadge"></span>
+  </button>
+  <div class="cat-grid" id="catGrid"></div>
+</div>
+
+<div id="study">
+  <div class="top-bar">
+    <button class="back-btn" onclick="goMenu()">← Back</button>
+    <span class="cat-label" id="studyCatLabel"></span>
+  </div>
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-text" id="progressText"></span>
+  </div>
+  <div class="card-container" id="cardContainer" onclick="flipCard()">
+    <div class="card-inner" id="cardInner">
+      <div class="card-face card-front" id="cardFront">
+        <span class="q-label" id="frontLabel">QUESTION</span>
+        <p class="card-text" id="frontText"></p>
+        <span class="tap-hint">tap to reveal</span>
+      </div>
+      <div class="card-face card-back" id="cardBack">
+        <span class="q-label" id="backLabel">ANSWER</span>
+        <p class="card-text" id="backText"></p>
+      </div>
+    </div>
+  </div>
+  <div class="btn-row hidden" id="btnRow">
+    <button class="judge-btn missed-btn" onclick="judge(false)">✕ Missed</button>
+    <button class="judge-btn got-btn" onclick="judge(true)">✓ Got it</button>
+  </div>
+  <p class="kb-hint">Space to flip · ← Missed · → Got it</p>
+</div>
+
+<div id="done">
+  <div class="done-icon" id="doneIcon"></div>
+  <h2>Round Complete!</h2>
+  <p class="done-sub" id="doneSub"></p>
+  <div class="score-row">
+    <div class="score-box" style="background:#D1FAE5">
+      <span class="score-num" style="color:#059669" id="doneGot"></span>
+      <span class="score-lbl">Got it</span>
+    </div>
+    <div class="score-box" style="background:#FEE2E2">
+      <span class="score-num" style="color:#DC2626" id="doneMissed"></span>
+      <span class="score-lbl">Missed</span>
+    </div>
+  </div>
+  <p class="done-pct" id="donePct"></p>
+  <div class="done-actions" id="doneActions"></div>
+</div>
+
+<script>
+const CATEGORIES = {
+  "Biological Development": [
+    { q: "What are the key areas of biological development from infancy to middle childhood?", a: "Rapid infant brain growth, synaptogenesis, myelination, motor milestones, physical coordination growth, healthy routines (sleep, nutrition, physical activity), screen time effects, and brain plasticity." },
+    { q: "What is synaptogenesis?", a: "The rapid formation of synapses (connections) between neurons in the brain, especially during infancy." },
+    { q: "What is myelination?", a: "A fatty coating that forms around neurons, speeding up brain processing and communication between brain cells." },
+    { q: "What is brain plasticity?", a: "The brain's ability to rewire and strengthen pathways through repetition and practice." },
+    { q: "How does screen time affect development?", a: "Screen time can negatively impact sleep and attention, interfering with healthy biological and cognitive development." },
+    { q: "What healthy routines support biological development?", a: "Sleep, nutrition, and physical activity all support healthy growth and brain development." },
+    { q: "What theorists connect to Biological Development?", a: "Neuroscience / Developmental Biology → plasticity + sensitive periods. Bandura → practice + modelling strengthens neural pathways. Health Behaviour Theory → routines influence wellness + self-regulation." },
+  ],
+  "Cognitive Development": [
+    { q: "What are Piaget's three stages covered in this unit?", a: "1) Sensorimotor (birth–2): learning through movement & senses. 2) Preoperational (2–7): symbolic play, egocentrism. 3) Concrete Operational (7–12): conservation, classification, seriation, logic about real things." },
+    { q: "What is the Sensorimotor stage? (Piaget)", a: "Birth to age 2: infants learn through movement and their senses." },
+    { q: "What is the Preoperational stage? (Piaget)", a: "Ages 2–7: children engage in symbolic play and show egocentrism (difficulty seeing others' perspectives)." },
+    { q: "What is the Concrete Operational stage? (Piaget)", a: "Ages 7–12: children develop conservation, classification, seriation, and logical reasoning about real, concrete things." },
+    { q: "What is conservation? (Piaget)", a: "Understanding that quantity stays the same even when the appearance changes (e.g., water in different-shaped glasses)." },
+    { q: "What is classification? (Piaget)", a: "Sorting objects into groups based on shared characteristics (e.g., shape, size, colour)." },
+    { q: "What is seriation? (Piaget)", a: "Placing items in order (e.g., smallest → largest, heaviest → lightest)." },
+    { q: "What is the Zone of Proximal Development (ZPD)? (Vygotsky)", a: "The range of tasks a child cannot do alone but can accomplish with help from someone more skilled." },
+    { q: "What is scaffolding? (Vygotsky)", a: "Guided support that is gradually removed as the child gains mastery of a task." },
+    { q: "What role does language play in Vygotsky's theory?", a: "Language is a cognitive tool — it helps children think, plan, and regulate behaviour. Learning is social and cultural." },
+    { q: "What is executive functioning?", a: "Mental skills including memory, planning, and inhibition that improve during middle childhood." },
+    { q: "What are cultural tools?", a: "Tools and practices passed through culture — language, symbols, routines — that support thinking and meaning-making." },
+  ],
+  "Socioemotional Development": [
+    { q: "What is Bowlby's Attachment Theory?", a: "Responsiveness from caregivers → secure attachment → emotional confidence. A secure base allows children to explore the world safely." },
+    { q: "What is Erikson's Initiative vs. Guilt stage?", a: "Ages 3–5: children begin to take initiative and lead activities. Too much criticism → guilt about their desires and actions." },
+    { q: "What is Erikson's Industry vs. Inferiority stage?", a: "Ages 6–12: children seek competence, mastery, and motivation. Success → confidence; repeated failure → feelings of inferiority." },
+    { q: "What is modelling? (Bandura)", a: "Children copy behaviours, strategies, and emotional responses by watching others (observational learning)." },
+    { q: "What is self-efficacy? (Bandura)", a: "A child's belief in their own capability, which grows through success and feedback." },
+    { q: "What are emotional regulation strategies?", a: "Techniques children develop (with adult support) to manage their feelings and reactions in healthy ways." },
+    { q: "What is social comparison?", a: "Children comparing themselves to peers in skills, appearance, or achievements — increases during ages 6–12." },
+    { q: "What is peer sensitivity?", a: "Heightened awareness of how peers view them; friendships become more important and complex." },
+    { q: "How do friendships change in middle childhood?", a: "Friendships become more stable and based on trust, rather than just proximity or shared activities." },
+  ],
+  "Spiritual / Identity Development": [
+    { q: "What are key aspects of spiritual/identity development?", a: "Belonging in family, culture, and classroom. Stories, routines, and ceremonies shape meaning. Early moral awareness and fairness emerge. Identity grows through relational experiences." },
+    { q: "How does Bandura connect to identity development?", a: "Identity is shaped by modelling and reinforcement — children internalize behaviours and values they observe being rewarded." },
+    { q: "How does Vygotsky connect to identity development?", a: "Cultural learning shapes how children understand themselves and their place in the world." },
+    { q: "How does Erikson connect to identity development?", a: "Competence (from Industry vs. Inferiority) contributes to a child's sense of identity and self-worth." },
+  ],
+  "Cross-Domain Interaction": [
+    { q: "What is cross-domain interaction?", a: "How one event (e.g., sleep loss, conflict, success, exclusion) ripples through all four domains: Biological ↔ Cognitive ↔ Socioemotional ↔ Spiritual/Identity." },
+    { q: "Give an example of how sleep loss ripples across all four domains.", a: "Biological: tired body/brain. Cognitive: harder to focus and learn. Socioemotional: irritable, harder to regulate emotions. Identity: may feel incapable or 'not good enough.'" },
+    { q: "Give an example of how a success experience ripples across domains.", a: "Biological: positive stress response. Cognitive: confidence boosts learning strategies. Socioemotional: pride, stronger peer relationships. Identity: sense of competence and belonging." },
+    { q: "Give an example of how exclusion ripples across domains.", a: "Biological: stress response activated. Cognitive: harder to concentrate. Socioemotional: sadness, withdrawal, difficulty trusting peers. Identity: feeling of not belonging, questioning self-worth." },
+  ],
+  "Vocabulary: Key Theorists": [
+    { q: "What key terms are associated with Piaget?", a: "Conservation, classification, seriation, symbolic thinking, logical reasoning." },
+    { q: "What key terms are associated with Vygotsky?", a: "ZPD, scaffolding, cultural tools, social learning, think-aloud." },
+    { q: "What key terms are associated with Erikson?", a: "Industry, guilt, competence, inferiority." },
+    { q: "What key terms are associated with Bandura?", a: "Modelling, reinforcement, observational learning, self-efficacy." },
+    { q: "What key terms are associated with Bowlby (Attachment)?", a: "Responsiveness, secure base, secure attachment, emotional confidence." },
+    { q: "What are the General Domain Terms to know?", a: "Plasticity, myelination, executive function, regulation, belonging." },
+  ],
+  "Short Answer Practice": [
+    { q: "Compare Piaget's view of learning with Vygotsky's.", a: "Piaget: children learn through individual exploration and move through universal stages. Vygotsky: learning is social — children learn through interaction, cultural tools, scaffolding, and support within the ZPD." },
+    { q: "How does Erikson explain motivation in the school years?", a: "Industry vs. Inferiority (ages 6–12): children are motivated by the desire to feel competent. Mastery and positive feedback → confidence. Repeated failure or criticism → feelings of inferiority and low motivation." },
+    { q: "Describe how Bandura's modelling theory appears in classroom behaviour.", a: "Children observe and copy the behaviours, strategies, and emotional responses of teachers and peers. Positive modelling (e.g., a teacher showing calm problem-solving) is internalized. Reinforcement of observed behaviours builds self-efficacy." },
+    { q: "Explain how sleep affects biological AND cognitive development.", a: "Biological: sleep supports brain growth, myelination, and physical health. Cognitive: sleep is essential for memory consolidation, attention, and executive functioning. Poor sleep disrupts learning and emotional regulation." },
+    { q: "How does peer comparison influence Erikson's 'Industry vs. Inferiority'?", a: "Children constantly compare themselves to peers academically, socially, and physically. Favourable comparisons → sense of industry and competence. Unfavourable comparisons → feelings of inferiority and self-doubt." },
+  ],
+  "Application Practice": [
+    { q: "A child solves a puzzle after scaffolding from a peer. Explain using Vygotsky.", a: "The puzzle was within the child's ZPD — too hard alone, but achievable with help. The peer provided scaffolding (hints, guidance). As the child gained understanding, the support was gradually removed, leading to independent mastery." },
+    { q: "A student copies their older sibling's calm-down strategy. Explain using Bandura.", a: "This is observational learning / modelling. The child watched their sibling use a strategy and imitated it. If the strategy worked (reinforcement), the child's self-efficacy grows — they believe they can regulate their own emotions." },
+    { q: "A child who feels 'not good at anything' avoids assignments. Explain using Erikson.", a: "This reflects the Inferiority side of Industry vs. Inferiority. Repeated struggles or negative feedback have led the child to doubt their competence. Avoidance is a way to protect themselves from further failure and shame." },
+    { q: "A student from a different cultural background struggles with belonging. Use Vygotsky + identity theory.", a: "Vygotsky: learning is shaped by cultural tools and social context. If the classroom doesn't reflect the child's cultural practices, language, or values, learning feels disconnected. Identity: belonging grows through cultural connection — without it, the child may feel excluded and question their self-worth." },
+  ],
+};
+
+const CAT_COLORS = {
+  "Biological Development":          { bg: "#D1FAE5", accent: "#059669", dark: "#064E3B" },
+  "Cognitive Development":            { bg: "#DBEAFE", accent: "#2563EB", dark: "#1E3A5F" },
+  "Socioemotional Development":       { bg: "#FCE7F3", accent: "#DB2777", dark: "#831843" },
+  "Spiritual / Identity Development": { bg: "#E0E7FF", accent: "#4F46E5", dark: "#312E81" },
+  "Cross-Domain Interaction":         { bg: "#FEF3C7", accent: "#D97706", dark: "#78350F" },
+  "Vocabulary: Key Theorists":        { bg: "#F3E8FF", accent: "#9333EA", dark: "#581C87" },
+  "Short Answer Practice":            { bg: "#FFE4E6", accent: "#E11D48", dark: "#881337" },
+  "Application Practice":             { bg: "#ECFDF5", accent: "#10B981", dark: "#065F46" },
+};
+
+let deck = [], idx = 0, flippedState = false, score = { got: 0, missed: 0 }, currentCat = "", currentColor = null;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function allCards() {
+  return Object.entries(CATEGORIES).flatMap(([cat, cards]) => cards.map(c => ({ ...c, category: cat })));
+}
+
+function initMenu() {
+  const all = allCards();
+  document.getElementById("totalCount").textContent = all.length + " flashcards across " + Object.keys(CATEGORIES).length + " topics";
+  document.getElementById("totalBadge").textContent = all.length;
+  const grid = document.getElementById("catGrid");
+  grid.innerHTML = "";
+  for (const [cat, cards] of Object.entries(CATEGORIES)) {
+    const c = CAT_COLORS[cat];
+    const btn = document.createElement("button");
+    btn.className = "cat-card";
+    btn.style.background = c.bg;
+    btn.style.borderLeft = "4px solid " + c.accent;
+    btn.innerHTML = '<span class="name" style="color:' + c.dark + '">' + cat + '</span><span class="badge" style="background:' + c.accent + '">' + cards.length + '</span>';
+    btn.addEventListener("mouseenter", function() { this.style.boxShadow = "0 6px 20px " + c.accent + "30"; });
+    btn.addEventListener("mouseleave", function() { this.style.boxShadow = "none"; });
+    (function(catName) { btn.addEventListener("click", function() { startCategory(catName); }); })(cat);
+    grid.appendChild(btn);
+  }
+}
+
+function show(id) {
+  document.getElementById("menu").style.display = id === "menu" ? "block" : "none";
+  document.getElementById("study").style.display = id === "study" ? "block" : "none";
+  document.getElementById("done").style.display = id === "done" ? "flex" : "none";
+}
+
+function goMenu() { show("menu"); }
+
+function startCategory(cat) {
+  currentCat = cat;
+  currentColor = CAT_COLORS[cat];
+  deck = shuffle(CATEGORIES[cat]);
+  beginStudy();
+}
+
+function startAll() {
+  currentCat = "All Categories";
+  currentColor = { bg: "#F3F4F6", accent: "#111827", dark: "#111827" };
+  deck = shuffle(allCards());
+  beginStudy();
+}
+
+function beginStudy() {
+  idx = 0; flippedState = false; score = { got: 0, missed: 0 };
+  show("study");
+  renderCard();
+}
+
+function renderCard() {
+  var card = deck[idx];
+  var color = card.category ? CAT_COLORS[card.category] : currentColor;
+  document.getElementById("studyCatLabel").textContent = card.category || currentCat;
+  document.getElementById("studyCatLabel").style.color = color.accent;
+  var pct = Math.round(((score.got + score.missed) / deck.length) * 100);
+  document.getElementById("progressFill").style.width = pct + "%";
+  document.getElementById("progressFill").style.background = color.accent;
+  document.getElementById("progressText").textContent = (score.got + score.missed) + " / " + deck.length;
+  document.getElementById("frontLabel").style.color = color.accent;
+  document.getElementById("frontText").textContent = card.q;
+  document.getElementById("cardFront").style.borderTop = "5px solid " + color.accent;
+  document.getElementById("backLabel").style.color = color.accent;
+  document.getElementById("backText").textContent = card.a;
+  document.getElementById("cardBack").style.borderTop = "5px solid " + color.accent;
+  document.getElementById("cardBack").style.background = color.bg;
+  document.getElementById("cardInner").classList.remove("flipped");
+  document.getElementById("cardContainer").className = "card-container";
+  document.getElementById("btnRow").classList.add("hidden");
+  flippedState = false;
+}
+
+function flipCard() {
+  if (flippedState) return;
+  flippedState = true;
+  document.getElementById("cardInner").classList.add("flipped");
+  document.getElementById("btnRow").classList.remove("hidden");
+}
+
+function judge(knew) {
+  document.getElementById("cardContainer").classList.add(knew ? "swipe-right" : "swipe-left");
+  if (knew) score.got++; else score.missed++;
+  setTimeout(function() {
+    if (idx + 1 >= deck.length) showDone();
+    else { idx++; renderCard(); }
+  }, 280);
+}
+
+function showDone() {
+  show("done");
+  var total = deck.length;
+  var pct = Math.round((score.got / total) * 100);
+  document.getElementById("doneIcon").textContent = pct >= 80 ? "\u{1F31F}" : pct >= 50 ? "\u{1F44D}" : "\u{1F4AA}";
+  document.getElementById("doneSub").textContent = currentCat;
+  document.getElementById("doneGot").textContent = score.got;
+  document.getElementById("doneMissed").textContent = score.missed;
+  document.getElementById("donePct").textContent = pct + "% correct";
+  var actions = document.getElementById("doneActions");
+  actions.innerHTML = "";
+  var againBtn = document.createElement("button");
+  againBtn.className = "done-btn";
+  againBtn.style.background = currentColor.accent;
+  againBtn.style.color = "#fff";
+  againBtn.textContent = "Study Again";
+  againBtn.onclick = beginStudy;
+  actions.appendChild(againBtn);
+  var backBtn = document.createElement("button");
+  backBtn.className = "done-btn";
+  backBtn.style.background = "#F3F4F6";
+  backBtn.style.color = "#374151";
+  backBtn.textContent = "Back to Topics";
+  backBtn.onclick = goMenu;
+  actions.appendChild(backBtn);
+}
+
+document.addEventListener("keydown", function(e) {
+  if (document.getElementById("study").style.display === "none") return;
+  if (e.key === " " || e.key === "Enter") { e.preventDefault(); if (!flippedState) flipCard(); }
+  if (flippedState && e.key === "ArrowRight") judge(true);
+  if (flippedState && e.key === "ArrowLeft") judge(false);
+});
+
+initMenu();
+</script>
+</body>
+</html>
